@@ -102,6 +102,12 @@ $exes = @(
     "https://github.com/d2phap/ImageGlass/releases/download/4.1.7.26/ImageGlass_4.1.7.26.exe"
     # Git
     "https://github.com/git-for-windows/git/releases/download/v2.14.1.windows.1/Git-2.14.1-64-bit.exe"
+    # Microsoft Visual C++ Redistributable for Visual Studio 2017
+    "https://go.microsoft.com/fwlink/?LinkId=746572"
+    # Build Tools for Visual Studio 2017
+    "https://www.visualstudio.com/thank-you-downloading-visual-studio/?sku=BuildTools&rel=15"
+    # .NET Framework
+    "https://www.microsoft.com/net"
 )
 
 # Install software with a setup.exe
