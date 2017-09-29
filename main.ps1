@@ -108,6 +108,8 @@ $exes = @(
     "https://www.visualstudio.com/thank-you-downloading-visual-studio/?sku=BuildTools&rel=15"
     # .NET Framework
     "https://www.microsoft.com/net"
+    # Thunder Bird
+    "https://download.mozilla.org/?product=thunderbird-52.3.0-SSL&os=win&lang=da"
 )
 
 # Install software with a setup.exe
