@@ -77,6 +77,9 @@ function DownloadAndExtractZip([string]$zip_url, [string]$destination)
     & "$PSScriptRoot\$full\${name}_x64_$version.exe" | Out-Null
 }
 
+msiexec.exe /i https://stable.just-install.it
+
+# TODO: How to get newest version?
 $exes = @(
     # Discord
     "https://discordapp.com/api/download?platform=win",
@@ -110,6 +113,8 @@ $exes = @(
     "https://www.microsoft.com/net"
     # Thunder Bird
     "https://download.mozilla.org/?product=thunderbird-52.3.0-SSL&os=win&lang=da"
+    # Virtual box
+    "http://download.virtualbox.org/virtualbox/5.1.28/VirtualBox-5.1.28-117968-Win.exe"
 )
 
 # Install software with a setup.exe
