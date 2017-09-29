@@ -77,7 +77,7 @@ if (!(IsAdmin) )
     & "$PSScriptRoot\$full\${name}_x64_$version.exe" | Out-Null
 }
 
-msiexec.exe /i https://stable.just-install.it
+msiexec.exe /i https://stable.just-install.it | Out-Null
 
 just-install 7zip
 just-install audacity
