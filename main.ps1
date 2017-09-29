@@ -8,7 +8,7 @@ $adminRole=[System.Security.Principal.WindowsBuiltInRole]::Administrator
 # Check to see if we are currently running "as Administrator"
 if (!$myWindowsPrincipal.IsInRole($adminRole))
 {
-    echo "Run as admin"
+    Write-Output "Run as admin"
     exit
 }
 
@@ -26,7 +26,7 @@ function Download([string]$url, [string]$destination)
 function DownloadAndExtractZip([string]$zip_url, [string]$destination)
 {
     $temp_file = "$PSScriptRoot\tmp.zip"
-    echo $temp_file
+    Write-Output $temp_file
 
     Download $zip_url $temp_file
     [io.compression.zipfile]::ExtractToDirectory($temp_file, $destination)
@@ -37,14 +37,14 @@ function DownloadAndExtractZip([string]$zip_url, [string]$destination)
 
 # Debloat Windows
 & {
-    ls -Recurse *.ps1 | Unblock-File
-    ls -Recurse *.psm1 | Unblock-File
+    Get-ChildItem -Recurse *.ps1 | Unblock-File
+    Get-ChildItem -Recurse *.psm1 | Unblock-File
     Set-ExecutionPolicy Unrestricted
 
     $full = "Debloater"
     DownloadAndExtractZip "https://github.com/W4RH4WK/Debloat-Windows-10/archive/master.zip" "$PSScriptRoot\$full"
 
-    echo "Debloating Windows."
+    Write-Output "Debloating Windows."
     
     $path = "$PSScriptRoot\$full\Debloat-Windows-10-master"
     $scripts = "$path\scripts"
@@ -71,8 +71,8 @@ function DownloadAndExtractZip([string]$zip_url, [string]$destination)
     $full = "${name}_$version"
     DownloadAndExtractZip "https://sdi-tool.org/releases/SDI_R1790.zip" "$PSScriptRoot\$full"
 
-    echo "Use Snappy Driver to install all the drivers you need."
-    echo "This script will continue when you close Snappy Drivers."
+    Write-Output "Use Snappy Driver to install all the drivers you need."
+    Write-Output "This script will continue when you close Snappy Drivers."
 
     & "$PSScriptRoot\$full\${name}_x64_$version.exe" | Out-Null
 }
