@@ -1,4 +1,4 @@
-. .\common\funcs.ps1
+. $PSScriptRoot\common\funcs.ps1
 
 if (!(IsAdmin) )
 {
