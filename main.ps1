@@ -117,7 +117,6 @@ choco install wget
 choco install gnuwin
 choco install foobar2000
 choco install rufus
-choco install grepwin
 choco install mpv
 choco install cs-script
 choco install graphviz.portable
