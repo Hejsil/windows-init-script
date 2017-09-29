@@ -1,36 +1,36 @@
-# Get the ID and security principal of the current user account
-$myWindowsID=[System.Security.Principal.WindowsIdentity]::GetCurrent()
-$myWindowsPrincipal=new-object System.Security.Principal.WindowsPrincipal($myWindowsID)
+. .\common\funcs.ps1
 
-# Get the security principal for the Administrator role
-$adminRole=[System.Security.Principal.WindowsBuiltInRole]::Administrator
-
-# Check to see if we are currently running "as Administrator"
-if (!$myWindowsPrincipal.IsInRole($adminRole))
+if (!(IsAdmin) )
 {
     Write-Output "Run as admin"
     exit
 }
 
-#########################################################################################
-# Actual script                                                                         #
-#########################################################################################
+& {
+    # We select the drive with most space
+    $drives = Get-PSDrive -PSProvider "FileSystem"
+    $roots = $drives.Root
+    $free = $drives.Free
+    
+    $zipped = [System.Linq.Enumerable]::Zip($roots, $free, [Func[Object, Object, Object[]]]{ ,$args })
+    $order = [System.Linq.Enumerable]::OrderByDescending($zipped, [Func[Object, Object]]{ Param($a); $a[1] })
+    $max = [System.Linq.Enumerable]::ToArray($order)[0]
+    $root = $max[0]
 
-Add-Type -assembly "system.io.compression.filesystem"
-
-function Download([string]$url, [string]$destination)
-{
-    Invoke-WebRequest -Uri $url -OutFile $destination
-}
-
-function DownloadAndExtractZip([string]$zip_url, [string]$destination)
-{
-    $temp_file = "$PSScriptRoot\tmp.zip"
-    Write-Output $temp_file
-
-    Download $zip_url $temp_file
-    [io.compression.zipfile]::ExtractToDirectory($temp_file, $destination)
-    Remove-Item $temp_file
+    # And move all our personal folders to this drive
+    Set-KnownFolderPath -KnownFolder "Contacts"    -Path "$($root)Mega\Contacts"
+    Set-KnownFolderPath -KnownFolder "Desktop"     -Path "$($root)Mega\Desktop"
+    Set-KnownFolderPath -KnownFolder "Documents"   -Path "$($root)Mega\Documents"
+    Set-KnownFolderPath -KnownFolder "Downloads"   -Path "$($root)" # I don"t want my download folder in my mega
+    Set-KnownFolderPath -KnownFolder "Favorites"   -Path "$($root)Mega\Favorites"
+    Set-KnownFolderPath -KnownFolder "Links"       -Path "$($root)Mega\Links"
+    Set-KnownFolderPath -KnownFolder "Music"       -Path "$($root)Mega\Music"
+    Set-KnownFolderPath -KnownFolder "Pictures"    -Path "$($root)Mega\Pictures"
+    Set-KnownFolderPath -KnownFolder "SavedGames"  -Path "$($root)Mega\SavedGames"
+    Set-KnownFolderPath -KnownFolder "SEARCH_CSC"  -Path "$($root)Mega\SEARCH_CSC"
+    Set-KnownFolderPath -KnownFolder "SEARCH_MAPI" -Path "$($root)Mega\SEARCH_MAPI"
+    Set-KnownFolderPath -KnownFolder "SearchHome"  -Path "$($root)Mega\SearchHome"
+    Set-KnownFolderPath -KnownFolder "Videos"      -Path "$($root)Mega\Videos"
 }
 
 # Todo: https://github.com/lltcggie/waifu2x-caffe/releases/download/1.1.8.4/waifu2x-caffe.zip
@@ -79,42 +79,58 @@ function DownloadAndExtractZip([string]$zip_url, [string]$destination)
 
 msiexec.exe /i https://stable.just-install.it
 
+just-install 7zip
+just-install audacity
+just-install autohotkey
+just-install battlenet
+just-install bcuninstaller
+just-install ccleaner
+just-install cmake
+just-install deluge
+just-install discord
+just-install everything-search
+just-install flux
+just-install geforce-experience
+just-install gimp
+just-install git
+just-install google-chrome
+just-install handbrake
+just-install imageglass
+just-install inkscape
+just-install jetbrains-toolbox
+just-install lockhunter
+just-install obs-studio
+just-install origin
+just-install python27
+just-install sharex
+just-install spotify
+just-install steam
+just-install thunderbird
+just-install virtualbox
+just-install virtualbox-extpack
+just-install visual-studio-code
+just-install windirstat
+
+Set-ExecutionPolicy Bypass; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString("https://chocolatey.org/install.ps1"))
+
+choco install wget
+choco install gnuwin
+choco install foobar2000
+choco install rufus
+choco install make
+choco install grepwin
+choco install mpv
+choco install cs-script
+choco install graphviz.portable
+choco install gnucash
+choco install openhardwaremonitor
+choco install bulkrenameutility.install
+choco install scriptcs
+
 # TODO: How to get newest version?
 $exes = @(
-    # Discord
-    "https://discordapp.com/api/download?platform=win",
     # Mega
-    "https://mega.nz/MEGAsyncSetup.exe",
-    # Steam
-    "https://steamcdn-a.akamaihd.net/client/installer/SteamSetup.exe",
-    # Google Chrome
-    "https://dl.google.com/tag/s/appguid%3D%7B8A69D345-D564-463C-AFF1-A69D9E530F96%7D%26iid%3D%7B0719C32B-B43C-7352-7D99-9EFB82A9ADBE%7D%26lang%3Den%26browser%3D5%26usagestats%3D0%26appname%3DGoogle%2520Chrome%26needsadmin%3Dprefers%26ap%3Dx64-stable-statsdef_1%26installdataindex%3Ddefaultbrowser/update2/installers/ChromeSetup.exe",
-    # Visual Studio Code
-    "https://go.microsoft.com/fwlink/?Linkid=852157",
-    # Jetbrains Toolbox
-    "https://download.jetbrains.com/toolbox/jetbrains-toolbox-1.4.2492.exe",
-    #Battlenet
-    "https://www.battle.net/download/getInstallerForGame?os=win&locale=enGB&version=LIVE&gameProgram=BATTLENET_APP",
-    # 7zip
-    "http://www.7-zip.org/a/7z1604-x64.exe",
-    # Lock Hunter
-    "http://lockhunter.com/exe/lockhuntersetup_3-2-3.exe"
-    # Gimp
-    "https://download.gimp.org/mirror/pub/gimp/v2.8/windows/gimp-2.8.22-setup.exe"
-    # Image Glass
-    "https://github.com/d2phap/ImageGlass/releases/download/4.1.7.26/ImageGlass_4.1.7.26.exe"
-    # Git
-    "https://github.com/git-for-windows/git/releases/download/v2.14.1.windows.1/Git-2.14.1-64-bit.exe"
-    # Microsoft Visual C++ Redistributable for Visual Studio 2017
-    "https://go.microsoft.com/fwlink/?LinkId=746572"
-    # Build Tools for Visual Studio 2017
-    "https://www.visualstudio.com/thank-you-downloading-visual-studio/?sku=BuildTools&rel=15"
-    # .NET Framework
-    "https://www.microsoft.com/net"
-    # Thunder Bird
-    "https://download.mozilla.org/?product=thunderbird-52.3.0-SSL&os=win&lang=da"
-    # Virtual box
-    "http://download.virtualbox.org/virtualbox/5.1.28/VirtualBox-5.1.28-117968-Win.exe"
+    "https://mega.nz/MEGAsyncSetup.exe"
 )
 
 # Install software with a setup.exe
@@ -126,7 +142,7 @@ foreach ($exe in $exes) {
     & "$PSScriptRoot\$tmp" | Out-Null
 }
 
-# Create AppModelUnlock if it doesn't exist, required for enabling Developer Mode
+# Create AppModelUnlock if it doesn"t exist, required for enabling Developer Mode
 $RegistryKeyPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock"
 if (-not(Test-Path -Path $RegistryKeyPath)) {
     New-Item -Path $RegistryKeyPath -ItemType Directory -Force
