@@ -10,12 +10,26 @@ if (!(IsAdmin) )
     # We select the drive with most space
     $drives = Get-PSDrive -PSProvider "FileSystem"
     $roots = $drives.Root
-    $free = $drives.Free
-    
-    $zipped = [System.Linq.Enumerable]::Zip($roots, $free, [Func[Object, Object, Object[]]]{ ,$args })
-    $order = [System.Linq.Enumerable]::OrderByDescending($zipped, [Func[Object, Object]]{ Param($a); $a[1] })
-    $max = [System.Linq.Enumerable]::ToArray($order)[0]
-    $root = $max[0]
+
+    # Root will be array if there are more than one
+    if ($roots.GetType() -eq [string]) {
+        $root = $roots
+    } else {
+        $free = $drives.Free
+        $i = 0
+        $max = $free[$i]
+        $index = $i
+        foreach ($v in $free) {
+            if ($v -gt $max) {
+                $max = $v
+                $index = $i
+            }
+            
+            $i += 1
+        }
+        
+        $root = $roots[$index]
+    }
 
     # And move all our personal folders to this drive
     Set-KnownFolderPath -KnownFolder "Contacts"    -Path "$($root)Mega\Contacts"
