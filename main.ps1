@@ -122,7 +122,7 @@ just-install steam
 just-install thunderbird
 just-install virtualbox
 just-install virtualbox-extpack
-just-install visual-studio-code
+# just-install visual-studio-code
 just-install windirstat
 
 Set-ExecutionPolicy Bypass; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString("https://chocolatey.org/install.ps1"))
@@ -143,6 +143,8 @@ choco install scriptcs
 $exes = @(
     # Mega
     "https://mega.nz/MEGAsyncSetup.exe"
+    # vs-code - It exists as a package, but we want to be able to set the options provided by the installer
+    "https://go.microsoft.com/fwlink/?Linkid=852157"
 )
 
 # Install software with a setup.exe
