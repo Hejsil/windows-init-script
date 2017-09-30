@@ -13,6 +13,31 @@ function IsAdmin() {
     return $myWindowsPrincipal.IsInRole($adminRole)
 }
 
+function GetBiggestDrive() {
+    $drives = Get-PSDrive -PSProvider "FileSystem"
+    $roots = $drives.Root
+
+    # Root will be array if there are more than one
+    if ($roots.GetType() -eq [string]) {
+        return $roots
+    } else {
+        $free = $drives.Free
+        $i = 0
+        $max = $free[$i]
+        $index = $i
+        foreach ($v in $free) {
+            if ($v -gt $max) {
+                $max = $v
+                $index = $i
+            }
+            
+            $i += 1
+        }
+        
+        return $roots[$index]
+    }
+}
+
 function Download([string]$url, [string]$destination)
 {
     Invoke-WebRequest -Uri $url -OutFile $destination

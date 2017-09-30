@@ -7,29 +7,7 @@ if (!(IsAdmin) )
 }
 
 & {
-    # We select the drive with most space
-    $drives = Get-PSDrive -PSProvider "FileSystem"
-    $roots = $drives.Root
-
-    # Root will be array if there are more than one
-    if ($roots.GetType() -eq [string]) {
-        $root = $roots
-    } else {
-        $free = $drives.Free
-        $i = 0
-        $max = $free[$i]
-        $index = $i
-        foreach ($v in $free) {
-            if ($v -gt $max) {
-                $max = $v
-                $index = $i
-            }
-            
-            $i += 1
-        }
-        
-        $root = $roots[$index]
-    }
+    $root = GetBiggestDrive
 
     # And move all our personal folders to this drive
     Set-KnownFolderPath -KnownFolder "Contacts"    -Path "$($root)Mega\Contacts"
@@ -55,12 +33,12 @@ if (!(IsAdmin) )
     Get-ChildItem -Recurse *.psm1 | Unblock-File
     Set-ExecutionPolicy Unrestricted
 
-    $full = "Debloater"
-    DownloadAndExtractZip "https://github.com/W4RH4WK/Debloat-Windows-10/archive/master.zip" "$PSScriptRoot\$full"
+    $full = "$PSScriptRoot\Debloater"
+    DownloadAndExtractZip "https://github.com/W4RH4WK/Debloat-Windows-10/archive/master.zip" "$full"
 
     Write-Output "Debloating Windows."
     
-    $path = "$PSScriptRoot\$full\Debloat-Windows-10-master"
+    $path = "$full\Debloat-Windows-10-master"
     $scripts = "$path\scripts"
     $utils = "$path\utils"
 
@@ -91,69 +69,78 @@ if (!(IsAdmin) )
     & "$PSScriptRoot\$full\${name}_x64_$version.exe" | Out-Null
 }
 
-msiexec.exe /i https://stable.just-install.it | Out-Null
+# Install packages from just-install
+& {
+    msiexec.exe /i https://stable.just-install.it | Out-Null
+    
+    just-install 7zip
+    just-install audacity
+    just-install autohotkey
+    just-install battlenet
+    just-install bcuninstaller
+    just-install ccleaner
+    just-install cmake
+    just-install deluge
+    just-install discord
+    just-install everything-search
+    just-install flux
+    just-install geforce-experience
+    just-install gimp
+    just-install git
+    just-install google-chrome
+    just-install handbrake
+    just-install imageglass
+    just-install inkscape
+    just-install jetbrains-toolbox
+    just-install lockhunter
+    just-install obs-studio
+    just-install origin
+    just-install python27
+    just-install sharex
+    just-install spotify
+    just-install steam
+    just-install thunderbird
+    just-install virtualbox
+    just-install virtualbox-extpack
+    # just-install visual-studio-code
+    just-install windirstat
+}
 
-just-install 7zip
-just-install audacity
-just-install autohotkey
-just-install battlenet
-just-install bcuninstaller
-just-install ccleaner
-just-install cmake
-just-install deluge
-just-install discord
-just-install everything-search
-just-install flux
-just-install geforce-experience
-just-install gimp
-just-install git
-just-install google-chrome
-just-install handbrake
-just-install imageglass
-just-install inkscape
-just-install jetbrains-toolbox
-just-install lockhunter
-just-install obs-studio
-just-install origin
-just-install python27
-just-install sharex
-just-install spotify
-just-install steam
-just-install thunderbird
-just-install virtualbox
-just-install virtualbox-extpack
-# just-install visual-studio-code
-just-install windirstat
+# Install packages from chocolatey
+& {
+    Set-ExecutionPolicy Bypass; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString("https://chocolatey.org/install.ps1"))
 
-Set-ExecutionPolicy Bypass; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString("https://chocolatey.org/install.ps1"))
+    choco install wget
+    choco install gnuwin
+    choco install foobar2000
+    choco install rufus
+    choco install mpv
+    choco install cs-script
+    choco install graphviz.portable
+    choco install gnucash
+    choco install openhardwaremonitor
+    choco install bulkrenameutility.install
+    choco install scriptcs
+}
 
-choco install wget
-choco install gnuwin
-choco install foobar2000
-choco install rufus
-choco install mpv
-choco install cs-script
-choco install graphviz.portable
-choco install gnucash
-choco install openhardwaremonitor
-choco install bulkrenameutility.install
-choco install scriptcs
-
-# TODO: How to get newest version?
-$exes = @(
-    # Mega
-    "https://mega.nz/MEGAsyncSetup.exe"
-    # vs-code - It exists as a package, but we want to be able to set the options provided by the installer
-    "https://go.microsoft.com/fwlink/?Linkid=852157"
-)
-
-# Install software with a setup.exe
-foreach ($exe in $exes) {
-    $secs = (Get-Date).Ticks
-    $tmp = "Temp$secs.exe"
-
-    Download $exe "$PSScriptRoot\$tmp"
-    & "$PSScriptRoot\$tmp" | Out-Null
+# Install other software with installers
+& {
+    # TODO: How to get newest version?
+    $exes = @(
+        # Mega
+        "https://mega.nz/MEGAsyncSetup.exe"
+        # vs-code - It exists as a package, but we want to be able to set the options provided by the installer
+        "https://go.microsoft.com/fwlink/?Linkid=852157"
+    )
+    
+    # Install software with a setup.exe
+    foreach ($exe in $exes) {
+        $secs = (Get-Date).Ticks
+        $tmp = "$secs.exe"
+    
+        Download $exe "$PSScriptRoot\$tmp"
+        & "$PSScriptRoot\$tmp" | Out-Null
+    }
 }
 
 # Create AppModelUnlock if it doesn"t exist, required for enabling Developer Mode

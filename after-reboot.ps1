@@ -11,16 +11,16 @@ if (!(IsAdmin))
     Get-ChildItem -Recurse *.ps1 | Unblock-File
     Get-ChildItem -Recurse *.psm1 | Unblock-File
     Set-ExecutionPolicy Unrestricted
-    
-    $full = "Debloater"
-    DownloadAndExtractZip "https://sdi-tool.org/releases/SDI_R1790.zip" $full
 
-    Write-Output "Debloating Windows. Second pass"
-    
-    & "$full\disable-windows-defender.ps1"
+    $full = "$PSScriptRoot\Debloater"
+    DownloadAndExtractZip "https://github.com/W4RH4WK/Debloat-Windows-10/archive/master.zip" "$full"
 
-    Write-Output "Done Debloating. Removing Windows Debloating scripts."
-    Remove-Item $full
+    Write-Output "Debloating Windows."
+    
+    $path = "$full\Debloat-Windows-10-master"
+    $scripts = "$path\scripts"
+
+    & "$scripts\disable-windows-defender.ps1"
 }
 
 pause
