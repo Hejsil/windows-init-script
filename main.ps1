@@ -111,7 +111,7 @@ if (!(IsAdmin) )
     Set-ExecutionPolicy Bypass; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString("https://chocolatey.org/install.ps1"))
 
     choco install wget
-    choco install gnuwin
+    choco install mingw
     choco install foobar2000
     choco install rufus
     choco install mpv
