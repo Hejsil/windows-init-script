@@ -72,6 +72,8 @@ if (!(IsAdmin) )
     & "$utils\enable-god-mode.ps1"
     & "$utils\disable-scheduled-tasks.ps1"
     & "$utils\disable-ShellExperienceHost.bat"
+
+    Remove-Item $full -Recurse
 }
 
 # Install packages from just-install
@@ -107,7 +109,6 @@ if (!(IsAdmin) )
     just-install thunderbird
     just-install virtualbox
     just-install virtualbox-extpack
-    # just-install visual-studio-code
     just-install windirstat
 }
 
@@ -141,10 +142,12 @@ if (!(IsAdmin) )
     # Install software with a setup.exe
     foreach ($exe in $exes) {
         $secs = (Get-Date).Ticks
-        $tmp = "$secs.exe"
+        $tmp = "$PSScriptRoot\$secs.exe"
     
-        Download $exe "$PSScriptRoot\$tmp"
-        & "$PSScriptRoot\$tmp" | Out-Null
+        Download $exe $tmp
+        & $tmp | Out-Null
+        
+        Remove-Item $tmp -Recurse
     }
 }
 
