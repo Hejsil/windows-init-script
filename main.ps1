@@ -13,7 +13,7 @@ if (!(IsAdmin) )
     Set-KnownFolderPath -KnownFolder "Contacts"    -Path "$($root)Mega\Contacts"
     Set-KnownFolderPath -KnownFolder "Desktop"     -Path "$($root)Mega\Desktop"
     Set-KnownFolderPath -KnownFolder "Documents"   -Path "$($root)Mega\Documents"
-    Set-KnownFolderPath -KnownFolder "Downloads"   -Path "$($root)" # I don"t want my download folder in my mega
+    Set-KnownFolderPath -KnownFolder "Downloads"   -Path "$($root)Download" # I don"t want my download folder in my mega
     Set-KnownFolderPath -KnownFolder "Favorites"   -Path "$($root)Mega\Favorites"
     Set-KnownFolderPath -KnownFolder "Links"       -Path "$($root)Mega\Links"
     Set-KnownFolderPath -KnownFolder "Music"       -Path "$($root)Mega\Music"
