@@ -6,6 +6,23 @@ if (!(IsAdmin) )
     exit
 }
 
+# Install Drivers with Snappy Drivers
+& {
+    $name = "SDI"
+    $version = "R1790"
+    $full = "$PSScriptRoot\${name}_$version"
+    DownloadAndExtractZip "https://sdi-tool.org/releases/SDI_R1790.zip" "$full"
+
+    Write-Output "Use Snappy Driver to install all the drivers you need."
+    Write-Output "This script will continue when you close Snappy Drivers."
+
+    & "$full\${name}_x64_$version.exe" | Out-Null
+    Remove-Item $full                   -Recurse
+    Remove-Item "$PSScriptRoot\logs"    -Recurse
+    Remove-Item "$PSScriptRoot\indexes" -Recurse
+    Remove-Item "$PSScriptRoot\drivers" -Recurse
+}
+
 & {
     $root = GetBiggestDrive
 
@@ -25,7 +42,8 @@ if (!(IsAdmin) )
     Set-KnownFolderPath -KnownFolder "Videos"      -Path "$($root)Mega\Videos"
 }
 
-# Todo: https://github.com/lltcggie/waifu2x-caffe/releases/download/1.1.8.4/waifu2x-caffe.zip
+# TODO: https://gallery.technet.microsoft.com/scriptcenter/Script-to-add-an-item-to-f523f1f3/file/75298/1/AddItemToContext.zip
+# TODO: https://github.com/lltcggie/waifu2x-caffe/releases/download/1.1.8.4/waifu2x-caffe.zip
 
 # Debloat Windows
 & {
@@ -54,19 +72,6 @@ if (!(IsAdmin) )
     & "$utils\enable-god-mode.ps1"
     & "$utils\disable-scheduled-tasks.ps1"
     & "$utils\disable-ShellExperienceHost.bat"
-}
-
-# Install Drivers with Snappy Drivers
-& {
-    $name = "SDI"
-    $version = "R1790"
-    $full = "${name}_$version"
-    DownloadAndExtractZip "https://sdi-tool.org/releases/SDI_R1790.zip" "$PSScriptRoot\$full"
-
-    Write-Output "Use Snappy Driver to install all the drivers you need."
-    Write-Output "This script will continue when you close Snappy Drivers."
-
-    & "$PSScriptRoot\$full\${name}_x64_$version.exe" | Out-Null
 }
 
 # Install packages from just-install
