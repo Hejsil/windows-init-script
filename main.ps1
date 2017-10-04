@@ -1,4 +1,4 @@
-. $PSScriptRoot\common\funcs.ps1
+. "$PSScriptRoot\common\funcs.ps1"
 
 if (!(IsAdmin) )
 {
@@ -116,17 +116,17 @@ if (!(IsAdmin) )
 & {
     Set-ExecutionPolicy Bypass; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString("https://chocolatey.org/install.ps1"))
 
-    choco install wget
-    choco install mingw
-    choco install foobar2000
-    choco install rufus
-    choco install mpv
-    choco install cs-script
-    choco install graphviz.portable
-    choco install gnucash
-    choco install openhardwaremonitor
-    choco install bulkrenameutility.install
-    choco install scriptcs
+    choco install wget -y
+    choco install mingw -y
+    choco install foobar2000 -y
+    choco install rufus -y
+    choco install mpv -y
+    choco install cs-script -y
+    choco install graphviz.portable -y
+    choco install gnucash -y
+    choco install openhardwaremonitor -y
+    choco install bulkrenameutility.install -y
+    choco install scriptcs -y
 }
 
 # Install other software with installers
