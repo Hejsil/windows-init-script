@@ -6,17 +6,10 @@
 $exes = @(
     # Mega
     "https://mega.nz/MEGAsyncSetup.exe"
-    # vs-code - It exists as a package, but we want to be able to set the options provided by the installer
-    "https://go.microsoft.com/fwlink/?Linkid=852157"
 )
 
 # Install software with a setup.exe
-foreach ($exe in $exes) {
-    $secs = (Get-Date).Ticks
-    $tmp = "$PSScriptRoot\$secs.exe"
-
-    Download $exe $tmp
-    & $tmp | Out-Null
-    
-    Remove-Item $tmp -Recurse
+foreach ($exe in $exes) 
+{
+    DownLoadAndRunExe $exe
 }

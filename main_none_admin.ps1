@@ -11,6 +11,7 @@ if (!(IsAdmin) )
 & "$PSScriptRoot\debloat_windows.ps1"
 & "$PSScriptRoot\install_software.ps1"
 & "$PSScriptRoot\install_exes.ps1"
+& "$PSScriptRoot\setup_vscode.ps1"
 & "$PSScriptRoot\set_default_browser.ps1"
 & "$PSScriptRoot\enable_developer_mode.ps1"
 

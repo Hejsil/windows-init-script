@@ -53,6 +53,19 @@ function DownloadAndExtractZip([string]$zip_url, [string]$destination)
     Remove-Item $temp_file
 }
 
+function DownLoadAndRunExe([string]$url)
+{
+    $tmp_name = (Get-Date).Ticks
+    $tmp_folder = "$PSScriptRoot\$tmp_name"
+    $tmp = "$tmp_folder\$secs.exe"
+
+    New-Item $tmp_folder -ItemType Directory
+    Download $url $tmp
+    & $tmp | Out-Null
+    
+    Remove-Item $tmp_folder -Recurse
+}
+
 function Set-KnownFolderPath {
     Param (
             [Parameter(Mandatory = $true)]

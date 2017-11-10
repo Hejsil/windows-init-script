@@ -27,12 +27,15 @@ $software = @(
     "bulkrenameutility.install"
 )
 
-foreach ($item in $software) {
+foreach ($item in $software) 
+{
     Write-Output "Installing $item through just-install."
-    if (!(just-install $item)) {
+    if (!(just-install $item)) 
+    {
         Write-Output "Could not install $item through just-install."
         Write-Output "Installing $item through choco."
-        if (!(choco install $item -y)) {
+        if (!(choco install $item -y)) 
+        {
             Write-Output "Could not install $item."
         }
     }
