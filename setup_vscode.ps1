@@ -10,6 +10,7 @@ $extensions = @(
 )
 
 DownLoadAndRunExe "https://go.microsoft.com/fwlink/?Linkid=852157"
+$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
 
 foreach ($ext in $extensions) 
 {
