@@ -25,6 +25,7 @@ $software = @(
     "cs-script"
     "openhardwaremonitor"
     "bulkrenameutility.install"
+    "rufus"
 )
 
 foreach ($item in $software) 
